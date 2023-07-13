@@ -6,19 +6,25 @@
       name: gateway
     cloud:
       gateway:
-        default-filters:
-          - name : JwtFilter
-
         routes:
           - id: external-service  # port: 8081
+            uri: lb://external-service
             predicates:
               - Path=/v1/external/**
-            uri: lb://external-service
+            filters:
+              - name: GlobalFilter
+                args:
+                  baseMessage: "글로벌 필터 실행시 기본으로 출력되는 메세지입니다"
 
           - id: member-service  # port: 8082
+            uri: lb://member-service
             predicates:
               - Path=/v1/member/**
-            uri: lb://member-service
+            filters:
+              - name: GlobalFilter
+                args:
+                  baseMessage: "글로벌 필터 실행시 기본으로 출력되는 메세지입니다"
+
     redis:
       host: localhost
       port: 6379
