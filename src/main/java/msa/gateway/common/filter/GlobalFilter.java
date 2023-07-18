@@ -44,13 +44,17 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
 
             // 예외 처리: 로그인 요청은 필터를 거치지 않고 직접 백엔드 서비스로 전달
             if ("/v1/member/login".equals(requestPath)) {
-                log.info("로그인 예외 처리");
+                log.info("로그인 요청은 필터 예외 처리");
+                return chain.filter(exchange);
+            }
+            // 예외 처리: 회원가입 요청은 필터를 거치지 않고 직접 백엔드 서비스로 전달
+            if ("/v1/member/signUp".equals(requestPath)) {
+                log.info("회원가입 요청은 필터 예외 처리");
                 return chain.filter(exchange);
             }
 
             // Authorization(accessToken) 검증
             if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
-                log.info("accessToken 검증");
                 String accessToken = requestHeader.substring(7);
 
                 if (jwtTokenProvider.validateToken(accessToken)) {
@@ -59,7 +63,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             }
 
             // 검증 실패하거나 Authorization 헤더가 없는 경우, 401 Unauthorized 에러를 반환합니다.
-            log.info("401 에러 반환");
+            log.info("유효하지 않은 AccessToken 또는 Authorization 헤더 없음");
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();
         });

@@ -14,7 +14,7 @@
             filters:
               - name: GlobalFilter
                 args:
-                  baseMessage: "글로벌 필터 실행시 기본으로 출력되는 메세지입니다"
+                  baseMessage: "external-service global filter"
 
           - id: member-service  # port: 8082
             uri: lb://member-service
@@ -23,7 +23,7 @@
             filters:
               - name: GlobalFilter
                 args:
-                  baseMessage: "글로벌 필터 실행시 기본으로 출력되는 메세지입니다"
+                  baseMessage: "member-service global filter"
 
     redis:
       host: localhost
@@ -31,8 +31,8 @@
     jwt:
       secret: thekeysizemustbegreaterthanorequalto256bits
       token:
-        accessExpTime: 60000   # 1분
-        refreshExpTime: 300000 # 5분
+        accessExpTime: 300000   # 5분
+        refreshExpTime: 1200000 # 20분
 
   eureka:
     client:
